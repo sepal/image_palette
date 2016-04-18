@@ -4,10 +4,20 @@ import (
 	"github.com/codegangsta/cli"
 	"fmt"
 	"os"
+	"log"
+	"net/http"
+	"github.com/sepal/color_space/app/web"
+	"github.com/mitchellh/colorstring"
 )
 
 var host string = ""
 var port int
+
+// PrintError exits the program with an error.
+func PrintError(err error) {
+	fmt.Println(colorstring.Color("[red]" + err.Error()))
+	os.Exit(1)
+}
 
 func checkArgs() {
 	if port == 0 {
@@ -38,7 +48,13 @@ func main() {
 	app.Action = func(c *cli.Context) {
 		checkArgs()
 		str := fmt.Sprintf("%v:%v", host, port)
-		fmt.Println(str)
+
+		log.Printf("Starting server at %v", str)
+		err := http.ListenAndServe(str, web.Route())
+
+		if err != nil {
+			PrintError(err)
+		}
 	}
 
 	app.Run(os.Args)
