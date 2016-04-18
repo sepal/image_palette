@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"net/http"
-	"fmt"
+	"github.com/sepal/color_space/app/web/models"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello world!")
+	JSONResponse(w, r, models.Message{"Hello World!"});
 }
