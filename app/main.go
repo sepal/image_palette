@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/codegangsta/cli"
 	"fmt"
-	"os"
+	"github.com/codegangsta/cli"
+	"github.com/mitchellh/colorstring"
+	"github.com/sepal/color_space/app/web"
 	"log"
 	"net/http"
-	"github.com/sepal/color_space/app/web"
-	"github.com/mitchellh/colorstring"
+	"os"
 )
 
 var host string = ""
@@ -50,7 +50,7 @@ func main() {
 		str := fmt.Sprintf("%v:%v", host, port)
 
 		log.Printf("Starting server at %v", str)
-		err := http.ListenAndServe(str, web.Route())
+		err := http.ListenAndServe(str, web.RouteApp())
 
 		if err != nil {
 			PrintError(err)

@@ -2,16 +2,39 @@ package web
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/sepal/color_space/app/web/handlers"
 	"net/http"
-	"fmt"
 )
 
-func Route() *mux.Router {
-	r := mux.NewRouter()
+type Route struct {
+	Name       string
+	Method     string
+	Path       string
+	HandleFunc http.HandlerFunc
+}
 
-	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello world!")
-	})
+type Routes []Route
+
+var routes = Routes{
+	Route{
+		"Index",
+		"GET",
+		"/",
+		handlers.Index,
+	},
+}
+
+func RouteApp() *mux.Router {
+	r := mux.NewRouter().StrictSlash(true)
+
+	for _, route := range routes {
+		r.
+			Methods(route.Method).
+			Path(route.Path).
+			Name(route.Name).
+			Handler(route.HandleFunc)
+
+	}
 
 	return r
 }
