@@ -10,7 +10,7 @@ type Route struct {
 	Name       string
 	Method     string
 	Path       string
-	HandleFunc http.HandlerFunc
+	HandlerFunc http.HandlerFunc
 }
 
 type Routes []Route
@@ -28,11 +28,15 @@ func RouteApp() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 
 	for _, route := range routes {
+		var handler http.Handler
+
+		handler = Logger(route.HandlerFunc, route.Name)
+
 		r.
 			Methods(route.Method).
 			Path(route.Path).
 			Name(route.Name).
-			Handler(route.HandleFunc)
+			Handler(handler)
 
 	}
 
