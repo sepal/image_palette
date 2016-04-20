@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/sepal/color_space/app/web/handlers"
+	"github.com/sepal/color_space/backend/web/handlers"
 	"net/http"
 )
 
