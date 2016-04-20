@@ -6,6 +6,7 @@ import (
 	"os"
 	"io"
 	"path"
+	"github.com/satori/go.uuid"
 )
 
 var UploadDir = "/tmp"
