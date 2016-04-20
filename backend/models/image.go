@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path"
+	"time"
 )
 
 var UploadDir = "/tmp"
@@ -16,6 +17,7 @@ type Image struct {
 	ID       string `gorethink:"id,omitempty" json:"id"`
 	Filename string `gorethink:"filename,omitempty" json:"filename"`
 	Path     string `gorethink:"path,omitempty" json:"path"`
+	Created  int64  `gorethink:"created,omitempty" json:"created"`
 }
 
 func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error) {
@@ -26,7 +28,7 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	img := &Image{
 		ID:       id,
 		Filename: header.Filename,
-		Path:     id+ext,
+		Path:     id + ext,
 	}
 
 	log.Printf("Creating new image: %v", img.Path)
@@ -44,7 +46,9 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 		return nil, err
 	}
 
-	log.Println("Saving image %v with ID %v to database.", img.Filename, img.ID)
+	log.Printf("Saving image %v with ID %v to database.", img.Filename, img.ID)
+
+	img.Created = time.Now().Unix()
 	err = r.Table("images").Insert(img).Exec(session)
 
 	return img, err
