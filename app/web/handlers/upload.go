@@ -4,13 +4,11 @@ import (
 	"net/http"
 	"github.com/sepal/color_space/app/web/models"
 	"log"
-	"fmt"
 )
 
 func Upload(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(5 << 20)
 
-	fmt.Println(r.Form)
 	file, header, err := r.FormFile("image")
 
 	if err != nil {

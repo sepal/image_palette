@@ -5,13 +5,14 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/mitchellh/colorstring"
 	"github.com/sepal/color_space/app/web"
+	"github.com/sepal/color_space/app/web/models"
 	"log"
 	"net/http"
 	"os"
 )
 
-var host string = ""
-var port int
+var host, uploadDir string
+var port int = 8080
 
 // PrintError exits the program with an error.
 func PrintError(err error) {
@@ -22,6 +23,10 @@ func PrintError(err error) {
 func checkArgs() {
 	if port == 0 {
 		port = 8080
+	}
+
+	if uploadDir != "" {
+		models.UploadDir = uploadDir
 	}
 }
 
@@ -42,6 +47,12 @@ func main() {
 			Usage:       "Port on which the webserver should listen",
 			Destination: &port,
 			EnvVar:      "PORT",
+		},
+		cli.StringFlag{
+			Name:        "uploadDir, u",
+			Usage:       "Directory to store the images",
+			Destination: &uploadDir,
+			EnvVar:      "UPLOAD_DIR",
 		},
 	}
 

@@ -8,7 +8,7 @@ import (
 	"path"
 )
 
-const UPLOAD_DIR = "./"
+var UploadDir = "/tmp"
 
 type Image struct {
 	Filename string
@@ -18,10 +18,8 @@ type Image struct {
 func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error) {
 	img := Image{
 		Filename: header.Filename,
-		Path: path.Join(UPLOAD_DIR, header.Filename),
+		Path: path.Join(UploadDir, header.Filename),
 	}
-
-
 
 	log.Printf("Creating new image: %v", header.Header)
 
