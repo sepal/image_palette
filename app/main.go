@@ -5,7 +5,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/mitchellh/colorstring"
 	"github.com/sepal/color_space/app/web"
-	"github.com/sepal/color_space/app/web/models"
+	"github.com/sepal/color_space/app/models"
 	"log"
 	"net/http"
 	"os"
