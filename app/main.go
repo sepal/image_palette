@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-var host, uploadDir string
+var host, uploadDir, rethinkHost, database string
 var port int = 8080
 
 // PrintError exits the program with an error.
@@ -27,6 +27,14 @@ func checkArgs() {
 
 	if uploadDir != "" {
 		models.UploadDir = uploadDir
+	}
+
+	if rethinkHost != "" {
+		rethinkHost = "localhost:28015"
+	}
+
+	if database != "" {
+		database = "colors"
 	}
 }
 
@@ -54,14 +62,33 @@ func main() {
 			Destination: &uploadDir,
 			EnvVar:      "UPLOAD_DIR",
 		},
+		cli.StringFlag{
+			Name:        "rethinkHost, r",
+			Usage:       "RethinkDB host to connect to",
+			Destination: &rethinkHost,
+			EnvVar:      "RETHINK_HOST",
+		},
+		cli.StringFlag{
+			Name:        "database, d",
+			Usage:       "RethinkDB database used store the image meta data",
+			Destination: &database,
+			EnvVar:      "DATABASE",
+		},
 	}
 
 	app.Action = func(c *cli.Context) {
 		checkArgs()
-		str := fmt.Sprintf("%v:%v", host, port)
 
-		log.Printf("Starting server at %v", str)
-		err := http.ListenAndServe(str, web.RouteApp())
+		err := models.Connect(rethinkHost, database)
+
+		if err != nil {
+			PrintError(err)
+		}
+
+		host := fmt.Sprintf("%v:%v", host, port)
+
+		log.Printf("Starting server at %v", host)
+		err = http.ListenAndServe(host, web.RouteApp())
 
 		if err != nil {
 			PrintError(err)
