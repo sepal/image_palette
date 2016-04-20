@@ -6,5 +6,5 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	JSONResponse(w, r, models.Message{"Hello World!"});
+	JSONResponse(w, r, http.StatusOK, models.Message{"Hello World!"});
 }

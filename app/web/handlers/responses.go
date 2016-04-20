@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 )
 
-func JSONResponse(w http.ResponseWriter, r *http.Request, v interface{}) {
+func JSONResponse(w http.ResponseWriter, r *http.Request, status int,  v interface{}) {
 	w.Header().Set("content-type", "application/json")
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(status)
 	err := json.NewEncoder(w).Encode(v)
 
 	if err != nil {

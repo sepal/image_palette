@@ -21,4 +21,10 @@ var routes = Routes{
 		"/",
 		handlers.Index,
 	},
+	Route{
+		"Upload",
+		"POST",
+		"/upload",
+		handlers.Upload,
+	},
 }
