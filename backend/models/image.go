@@ -9,6 +9,12 @@ import (
 	"os"
 	"path"
 	"time"
+	"github.com/influxdata/telegraf/plugins/outputs/file"
+	"net/http"
+	"image"
+	"image/png"
+	"image/jpeg"
+	"fmt"
 )
 
 var UploadDir = "/tmp"
@@ -52,4 +58,54 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	err = r.Table("images").Insert(img).Exec(session)
 
 	return img, err
+}
+
+func (i *Image) openFile() (file *os.File, error) {
+	file, err := os.Open(path.Join(UploadDir, i.Path))
+	return file, err
+}
+
+
+func GetType(file *os.File) (string, error) {
+	// Read the first 256 bytes which should be enough to detect the image type.
+	bytes := make([]byte, 256)
+	_, err := file.Read(bytes)
+
+	if err != nil {
+		return "", err
+	}
+
+	// Reset read pointer to 0.
+	file.Seek(0, 0)
+
+	return http.DetectContentType(bytes), nil
+}
+
+func (i *Image) GetImage() (*image.Image, error) {
+	file, err := i.openFile()
+
+	if err != nil {
+		return nil, err
+	}
+
+	imgType, err := GetType(file)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var img image.Image
+
+	switch imgType {
+	case "image/png":
+		img, err = png.Decode(im)
+		break
+	case "image/jpeg":
+		img, err = jpeg.Decode(file)
+		break
+	default:
+		return nil, fmt.Errorf("Unsupported image type %v", imgType)
+	}
+
+	return &img, nil
 }
