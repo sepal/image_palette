@@ -29,12 +29,12 @@ func checkArgs() {
 		models.UploadDir = uploadDir
 	}
 
-	if rethinkHost != "" {
+	if rethinkHost == "" {
 		rethinkHost = "localhost:28015"
 	}
 
-	if database != "" {
-		database = "colors"
+	if database == "" {
+		database = "image_palette"
 	}
 }
 
@@ -79,6 +79,7 @@ func main() {
 	app.Action = func(c *cli.Context) {
 		checkArgs()
 
+		log.Printf("Trying to connect to %v using the database %v\n", rethinkHost, database)
 		err := models.Connect(rethinkHost, database)
 
 		if err != nil {

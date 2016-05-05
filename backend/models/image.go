@@ -9,7 +9,6 @@ import (
 	"os"
 	"path"
 	"time"
-	"github.com/influxdata/telegraf/plugins/outputs/file"
 	"net/http"
 	"image"
 	"image/png"
@@ -60,11 +59,10 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	return img, err
 }
 
-func (i *Image) openFile() (file *os.File, error) {
+func (i *Image) openFile() (*os.File, error) {
 	file, err := os.Open(path.Join(UploadDir, i.Path))
 	return file, err
 }
-
 
 func GetType(file *os.File) (string, error) {
 	// Read the first 256 bytes which should be enough to detect the image type.
@@ -98,7 +96,7 @@ func (i *Image) GetImage() (*image.Image, error) {
 
 	switch imgType {
 	case "image/png":
-		img, err = png.Decode(im)
+		img, err = png.Decode(file)
 		break
 	case "image/jpeg":
 		img, err = jpeg.Decode(file)
