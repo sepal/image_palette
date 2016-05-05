@@ -54,7 +54,7 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	log.Printf("Saving image %v with ID %v to database.", img.Filename, img.ID)
 
 	img.Created = time.Now().Unix()
-	err = r.Table("images").Insert(img).Exec(session)
+	err = r.Table("images").Insert(img).Exec(Session)
 
 	return img, err
 }

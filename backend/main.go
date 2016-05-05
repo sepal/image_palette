@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/mitchellh/colorstring"
-	"github.com/sepal/image_palette/backend/web"
 	"github.com/sepal/image_palette/backend/models"
+	"github.com/sepal/image_palette/backend/palette"
+	"github.com/sepal/image_palette/backend/web"
 	"log"
 	"net/http"
 	"os"
@@ -85,6 +86,8 @@ func main() {
 		if err != nil {
 			PrintError(err)
 		}
+
+		palette.Listen()
 
 		host := fmt.Sprintf("%v:%v", host, port)
 
