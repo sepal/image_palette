@@ -1,7 +1,7 @@
 package models
 
 import (
-	r "github.com/dancannon/gorethink"
+	r "gopkg.in/dancannon/gorethink.v2"
 )
 
 var session *r.Session
