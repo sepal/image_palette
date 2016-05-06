@@ -21,6 +21,7 @@ func PrintError(err error) {
 	os.Exit(1)
 }
 
+// Set defaults for the main variables, which may been have set via environment variables or arguments.
 func checkArgs() {
 	if port == 0 {
 		port = 8080

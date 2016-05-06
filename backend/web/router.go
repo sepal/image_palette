@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-
+// RouteApp creates the route for the http server.
 func RouteApp() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 

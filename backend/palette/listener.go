@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// Listen startes listening to incoming messages and spawns Worker functions to calculate the color schemes for the
+// images.
 func Listen() {
 	log.Printf("Started listening")
 	stream, err := r.Table("images").Changes().Run(models.Session)

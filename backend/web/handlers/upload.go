@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// Upload handles the route to which the images are uploaded. It accepts a POST request containing an image on the
+// 'image' key and returns the meta data (id, created date...) for the uploaded image.
 func Upload(w http.ResponseWriter, r *http.Request) {
 	r.ParseMultipartForm(5 << 20)
 
