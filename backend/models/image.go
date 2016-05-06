@@ -1,28 +1,32 @@
 package models
 
 import (
-	r "gopkg.in/dancannon/gorethink.v2"
+	"fmt"
 	"github.com/satori/go.uuid"
+	r "gopkg.in/dancannon/gorethink.v2"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"log"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path"
 	"time"
-	"net/http"
-	"image"
-	"image/png"
-	"image/jpeg"
-	"fmt"
 )
 
 var UploadDir = "/tmp"
 
+type Palette [5]string
+
 type Image struct {
-	ID       string `gorethink:"id,omitempty" json:"id"`
-	Filename string `gorethink:"filename,omitempty" json:"filename"`
-	Path     string `gorethink:"path,omitempty" json:"path"`
-	Created  int64  `gorethink:"created,omitempty" json:"created"`
+	ID       string      `gorethink:"id,omitempty" json:"id"`
+	Filename string      `gorethink:"filename,omitempty" json:"filename"`
+	Path     string      `gorethink:"path,omitempty" json:"path"`
+	Created  int64       `gorethink:"created,omitempty" json:"created"`
+	Finished int64       `gorethink:"finished,omitempty" json:"finished"`
+	Colors   Palette `gorethink:"colors,omitempty" json:"colors"`
 }
 
 func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error) {
@@ -108,6 +112,8 @@ func (i *Image) GetImage() (*image.Image, error) {
 	return &img, nil
 }
 
-func (i *Image) SavePalette(colors [5]string) {
-
+func (i *Image) SavePalette(c Palette) error {
+	i.Colors = c
+	i.Finished = time.Now().Unix()
+	return r.Table("images").Get(i.ID).Update(i).Exec(Session)
 }

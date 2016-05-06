@@ -17,11 +17,11 @@ func Listen() {
 
 
 	go func() {
-		hash := make(map[string]models.Image)
-		for stream.Next(&hash) {
+		update := make(map[string]models.Image)
+		for stream.Next(&update) {
 			// If old_val is empty, then we received a new Image, for which we should spawn a new worker.
-			if hash["old_val"] == (models.Image{}) {
-
+			if update["old_val"] == (models.Image{}) {
+				go Worker(update["new_val"])
 			}
 		}
 	}()
