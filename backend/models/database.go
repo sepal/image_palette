@@ -6,6 +6,7 @@ import (
 
 var Session *r.Session
 
+// Connects the application to the RethinkDB host and database.
 func Connect(host, database string) (err error) {
 	Session, err = r.Connect(r.ConnectOpts{
 		Address:  host,
