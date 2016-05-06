@@ -3,7 +3,10 @@ package palette
 import (
 	"fmt"
 	"github.com/mdesenfants/gokmeans"
+	"github.com/nfnt/resize"
+	"github.com/sepal/image_palette/backend/models"
 	"image"
+	"log"
 )
 
 // A worker calculates the 5 most dominant colors in an image based on the k-means algorithm.
@@ -14,6 +17,15 @@ const MAX_HEIGHT = 200
 
 // Palette is a slice with the dominant colors for an image.
 type Palette [5][3]int
+
+func (p Palette) ToHex() (res [5]string) {
+	for i, val := range p {
+		r := val[0]
+		g := val[1]
+		b := val[2]
+		res[i] = fmt.Sprintf("#%X%X%X", r, g ,b)
+	}
+}
 
 // calcPalette returns the dominant colors the given image.
 func calcPalette(img image.Image) (Palette, error) {
@@ -56,4 +68,25 @@ func calcPalette(img image.Image) (Palette, error) {
 		palette[idx][2] = uint8(node[2])
 	}
 	return palette, nil
+}
+
+// Routine to calculate and save the palette of an image.
+func Worker(image models.Image) {
+	img, err := image.GetImage()
+
+	if err != nil {
+		log.Println("Could not open image %v, due to: %v.", image.Filename, err)
+	}
+
+	// Resize the image, to accelerate the calculation.
+	// todo: test different interpolation functions
+	thumbnail := resize.Resize(0, MAX_HEIGHT, img, resize.NearestNeighbor)
+
+	palette, err := calcPalette(thumbnail)
+
+	if err != nil {
+		log.Println("Could calculate palette for %v, because of: %v", image.Filename, err)
+	}
+
+	image.SavePalette(palette.ToHex())
 }

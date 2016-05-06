@@ -107,3 +107,7 @@ func (i *Image) GetImage() (*image.Image, error) {
 
 	return &img, nil
 }
+
+func (i *Image) SavePalette(colors [5]string) {
+
+}
