@@ -18,8 +18,10 @@ import (
 
 var UploadDir = "/tmp"
 
+// Palette represents the 5 dominant colors from an image as an array of hex codes.
 type Palette [5]string
 
+// Image represents the uploaded image for which the dominant should be calculated.
 type Image struct {
 	ID       string      `gorethink:"id,omitempty" json:"id"`
 	Filename string      `gorethink:"filename,omitempty" json:"filename"`
@@ -29,6 +31,7 @@ type Image struct {
 	Colors   Palette `gorethink:"colors,omitempty" json:"colors"`
 }
 
+// NewImage generates an image out of given file from a form request.
 func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error) {
 	id := uuid.NewV4().String()
 
@@ -63,11 +66,13 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	return img, err
 }
 
+// openFile opens the images file.
 func (i *Image) openFile() (*os.File, error) {
 	file, err := os.Open(path.Join(UploadDir, i.Path))
 	return file, err
 }
 
+// GetType returns the file MIME type of a given fi.e
 func GetType(file *os.File) (string, error) {
 	// Read the first 256 bytes which should be enough to detect the image type.
 	bytes := make([]byte, 256)
@@ -83,8 +88,10 @@ func GetType(file *os.File) (string, error) {
 	return http.DetectContentType(bytes), nil
 }
 
+// GetImage opens and decodes the file of an image, which is returned.
 func (i *Image) GetImage() (*image.Image, error) {
 	file, err := i.openFile()
+	defer file.Close()
 
 	if err != nil {
 		return nil, err
@@ -112,6 +119,7 @@ func (i *Image) GetImage() (*image.Image, error) {
 	return &img, nil
 }
 
+// Save the palette of the image to the database.
 func (i *Image) SavePalette(c Palette) error {
 	i.Colors = c
 	i.Finished = time.Now().Unix()
