@@ -97,5 +97,5 @@ func Worker(image models.Image) {
 		log.Fatalf("Error while trying to save palette to database.")
 	}
 
-	log.Printf("Finished calculating color scheme for file %v")
+	log.Printf("Finished calculating color scheme for file %v", image.Filename)
 }

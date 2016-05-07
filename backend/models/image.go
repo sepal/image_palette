@@ -23,11 +23,11 @@ type Palette [5]string
 
 // Image represents the uploaded image for which the dominant should be calculated.
 type Image struct {
-	ID       string      `gorethink:"id,omitempty" json:"id"`
-	Filename string      `gorethink:"filename,omitempty" json:"filename"`
-	Path     string      `gorethink:"path,omitempty" json:"path"`
-	Created  int64       `gorethink:"created,omitempty" json:"created"`
-	Finished int64       `gorethink:"finished,omitempty" json:"finished"`
+	ID       string  `gorethink:"id,omitempty" json:"id"`
+	Filename string  `gorethink:"filename,omitempty" json:"filename"`
+	Path     string  `gorethink:"path,omitempty" json:"path"`
+	Created  int64   `gorethink:"created,omitempty" json:"created"`
+	Finished int64   `gorethink:"finished,omitempty" json:"finished"`
 	Colors   Palette `gorethink:"colors,omitempty" json:"colors"`
 }
 
@@ -61,7 +61,7 @@ func NewImage(file multipart.File, header *multipart.FileHeader) (*Image, error)
 	log.Printf("Saving image %v with ID %v to database.", img.Filename, img.ID)
 
 	img.Created = time.Now().Unix()
-	err = r.Table("images").Insert(img).Exec(Session)
+	err = r.Table("images").Insert(img).Exec(session)
 
 	return img, err
 }
@@ -123,5 +123,16 @@ func (i *Image) GetImage() (*image.Image, error) {
 func (i *Image) SavePalette(c Palette) error {
 	i.Colors = c
 	i.Finished = time.Now().Unix()
-	return r.Table("images").Get(i.ID).Update(i).Exec(Session)
+	return r.Table("images").Get(i.ID).Update(i).Exec(session)
+}
+
+// ImageChanges listens to changes of the given operation in the images table and outputs the image to given channel.
+func ImageChanges() (* r.Cursor, error) {
+	stream, err := r.Table("images").Changes().Run(session)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return stream, nil
 }

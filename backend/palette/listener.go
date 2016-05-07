@@ -1,7 +1,6 @@
 package palette
 
 import (
-	r "gopkg.in/dancannon/gorethink.v2"
 	"github.com/sepal/image_palette/backend/models"
 	"log"
 )
@@ -10,7 +9,7 @@ import (
 // images.
 func Listen() {
 	log.Printf("Started listening")
-	stream, err := r.Table("images").Changes().Run(models.Session)
+	stream, err := models.ImageChanges()
 
 	if err != nil {
 		log.Fatalf("Error while trying to subscribe to images feed: %v", err)
