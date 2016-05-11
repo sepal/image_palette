@@ -7,20 +7,20 @@ import (
 
 // RouteApp creates the route for the http server.
 func RouteApp() *mux.Router {
-	r := mux.NewRouter().StrictSlash(true)
-
+	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
 
-		handler = Logger(route.HandlerFunc, route.Name)
+		handler = route.HandlerFunc
+		handler = Logger(handler, route.Name)
 
-		r.
-			Methods(route.Method).
-			Path(route.Path).
-			Name(route.Name).
-			Handler(handler)
+		router.
+		Methods(route.Method).
+		Path(route.Pattern).
+		Name(route.Name).
+		Handler(handler)
 
 	}
 
-	return r
+	return router
 }

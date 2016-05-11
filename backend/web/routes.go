@@ -1,15 +1,15 @@
 package web
 
 import (
-	"github.com/sepal/image_palette/backend/web/handlers"
 	"net/http"
+	"github.com/sepal/image_palette/backend/web/handlers"
 )
 
 // Route represents a route for the web server.
 type Route struct {
-	Name       string
-	Method     string
-	Path       string
+	Name        string
+	Method      string
+	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
 
@@ -29,5 +29,11 @@ var routes = Routes{
 		"POST",
 		"/upload",
 		handlers.Upload,
+	},
+	Route{
+		"ImageWS",
+		"GET",
+		"/image/{imageID}",
+		handlers.ImageWS,
 	},
 }

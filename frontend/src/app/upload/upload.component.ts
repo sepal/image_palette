@@ -5,6 +5,20 @@ import {Component} from '@angular/core';
     img {
         max-width: 960px;
         height: auto;
+    }
+    .color {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin: 5px;
+        text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.8);
+        
+    }
+    
+    .color span {
+        height: 100px;
+        line-height: 100px;
+    }
     `],
     template: `
     <div *ngIf="image_submitted == false">
@@ -12,7 +26,9 @@ import {Component} from '@angular/core';
         <input (click)="uploadImage($event)" type="submit" />
     </div>
     <div *ngIf="image_submitted == true">
-        {{server_response}}
+        <div *ngFor="let color of colors" class="color" [style.background-color]="color">
+          <span>{{color}}</span>
+        </div>
     </div>
     <div *ngIf="image_src != null">
         <img class="preview" src={{image_src}} alt={{image_name}}>
@@ -25,7 +41,8 @@ export class UploadComponent {
     image_src: string;
     image_name: string;
 
-    server_response: string;
+    colors: Array<string>;
+
 
     constructor() {
         this.image_submitted = false
@@ -35,6 +52,12 @@ export class UploadComponent {
         this.makeFileRequest('http://localhost:8000/upload', [], this.image).then((result) => {
             this.server_response = result.id;
             this.image_submitted = true;
+
+            let ws: WebSocket = new WebSocket(`ws://localhost:8000/image/${result.id}`);
+            ws.onmessage = (event) => {
+                let img = JSON.parse(event.data);
+                this.colors = img.colors;
+            }
         }).catch((err) => {
             console.error("Error while uploading image:");
             console.error(err);

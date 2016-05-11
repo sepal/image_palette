@@ -15,7 +15,7 @@ import (
 var host, uploadDir, rethinkHost, database string
 var port int = 8080
 
-// PrintError exits the program with an error.
+// PrintError exits xthe program with an error.
 func PrintError(err error) {
 	fmt.Println(colorstring.Color("[red]" + err.Error()))
 	os.Exit(1)
