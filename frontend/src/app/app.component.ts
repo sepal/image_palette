@@ -3,7 +3,6 @@ import { RouteConfig, ROUTER_DIRECTIVES } from '@angular/router-deprecated';
 
 import { ApiService } from './shared';
 import { HomeComponent } from './home';
-import { AboutComponent } from './about';
 import { UploadComponent } from './upload';
 
 import '../style/app.scss';
@@ -21,11 +20,9 @@ import '../style/app.scss';
 })
 @RouteConfig([
   {path: '/', component: HomeComponent, name: 'Home'},
-  {path: '/About', component: AboutComponent, name: 'About'},
   {path: '/Upload', component: UploadComponent, name: 'Upload'}
 ])
 export class AppComponent {
-  url = 'https://github.com/preboot/angular2-webpack';
 
   constructor(private api: ApiService) {
   }
