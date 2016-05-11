@@ -9,6 +9,7 @@ import (
 // JSONResponse generates a json response for a route.
 func JSONResponse(w http.ResponseWriter, r *http.Request, status int,  v interface{}) {
 	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.WriteHeader(status)
 	err := json.NewEncoder(w).Encode(v)
