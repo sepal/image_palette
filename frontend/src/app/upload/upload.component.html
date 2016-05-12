@@ -1,0 +1,12 @@
+<div *ngIf="image_submitted == false">
+  <input (change)="fileSelected($event)" type="file"/>
+  <input (click)="uploadImage($event)" type="submit" />
+</div>
+<div *ngIf="image_submitted == true">
+  <div *ngFor="let color of colors" class="color" [style.background-color]="color">
+    <span>{{color}}</span>
+  </div>
+</div>
+<div *ngIf="image_src != null">
+  <img class="preview" src={{image_src}} alt={{image_name}}>
+</div>
