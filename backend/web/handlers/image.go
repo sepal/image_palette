@@ -43,6 +43,8 @@ func ImageCreate(w http.ResponseWriter, r *http.Request) {
 		JSONResponse(w, r, http.StatusInternalServerError, models.Message{"Failed to save the uploaded image."})
 		return
 	}
+
+	JSONResponse(w, r, http.StatusOK, img)
 }
 
 // ImageChanges creates a new web socket to subscribe for an image. The server will returned a json object with the
@@ -56,7 +58,7 @@ func ImageCalculated(w http.ResponseWriter, r *http.Request) {
 	stream, err := models.ImageChanges(id)
 
 	if err != nil {
-		log.Printf("Could not subscribe to image changes with the id %v because of: %v", img.ID, err)
+		log.Printf("Could not subscribe to image changes with the id %v because of: %v", id, err)
 		JSONResponse(w, r, http.StatusInternalServerError, models.Message{"Could not create websocket"})
 		return
 	}

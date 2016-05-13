@@ -9,7 +9,7 @@ import (
 // images.
 func Listen() {
 	log.Printf("Started listening")
-	stream, err := models.ImageChanges()
+	stream, err := models.ImageChanges("")
 
 	if err != nil {
 		log.Fatalf("Error while trying to subscribe to images feed: %v", err)

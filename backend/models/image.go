@@ -126,7 +126,9 @@ func (i *Image) SavePalette(c Palette) error {
 	return r.Table("images").Get(i.ID).Update(i).Exec(session)
 }
 
-// ImageChanges listens to changes of the given operation in the images table and outputs the image to given channel.
+// ImageChanges listens to changes of the given operation in the images table and outputs the image to given channel. If
+// an empty id string is passed, then the stream listens to all image changes, otherwise only to the image with the
+// given id.
 func ImageChanges(imageID string) (stream *r.Cursor, err error) {
 	if imageID == "" {
 		stream, err = r.Table("images").Changes().Run(session)

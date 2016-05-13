@@ -33,7 +33,7 @@ var routes = Routes{
 	Route{
 		"Upload",
 		"POST",
-		"/upload",
-		handlers.ImageChanges,
+		"/image/{imageID}/calculated",
+		handlers.ImageCalculated,
 	},
 }
