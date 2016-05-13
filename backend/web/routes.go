@@ -7,9 +7,9 @@ import (
 
 // Route represents a route for the web server.
 type Route struct {
-	Name       string
-	Method     string
-	Path       string
+	Name        string
+	Method      string
+	Path        string
 	HandlerFunc http.HandlerFunc
 }
 
@@ -28,6 +28,12 @@ var routes = Routes{
 		"Upload",
 		"POST",
 		"/upload",
-		handlers.Upload,
+		handlers.ImageCreate,
+	},
+	Route{
+		"Upload",
+		"POST",
+		"/upload",
+		handlers.ImageChanges,
 	},
 }

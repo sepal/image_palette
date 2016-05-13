@@ -15,8 +15,6 @@ func Listen() {
 		log.Fatalf("Error while trying to subscribe to images feed: %v", err)
 	}
 
-
-
 	go func() {
 		update := make(map[string]models.Image)
 		for stream.Next(&update) {

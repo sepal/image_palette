@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"net/http"
-	"log"
 	"encoding/json"
+	"log"
+	"net/http"
 )
 
 // JSONResponse generates a json response for a route.
-func JSONResponse(w http.ResponseWriter, r *http.Request, status int,  v interface{}) {
+func JSONResponse(w http.ResponseWriter, r *http.Request, status int, v interface{}) {
 	w.Header().Set("content-type", "application/json")
 
 	w.WriteHeader(status)

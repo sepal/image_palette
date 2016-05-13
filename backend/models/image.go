@@ -127,8 +127,12 @@ func (i *Image) SavePalette(c Palette) error {
 }
 
 // ImageChanges listens to changes of the given operation in the images table and outputs the image to given channel.
-func ImageChanges() (* r.Cursor, error) {
-	stream, err := r.Table("images").Changes().Run(session)
+func ImageChanges(imageID string) (stream *r.Cursor, err error) {
+	if imageID == "" {
+		stream, err = r.Table("images").Changes().Run(session)
+	} else {
+		stream, err = r.Table("images").Get(imageID).Changes().Run(session)
+	}
 
 	if err != nil {
 		return nil, err
