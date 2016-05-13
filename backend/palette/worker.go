@@ -24,7 +24,7 @@ func (p Palette) ToHex() (res models.Palette) {
 		r := val[0]
 		g := val[1]
 		b := val[2]
-		res[i] = fmt.Sprintf("#%X%X%X", r, g, b)
+		res[i] = fmt.Sprintf("#%02X%02X%02X", r, g, b)
 	}
 	return res
 }
